@@ -13,8 +13,6 @@ namespace ToDoApp.WebApi.Handlers
 {
     public class ApiExceptionHandlerAttribute : ExceptionFilterAttribute
     {
-        private IAuditLogService _auditLogService;
-
         public override void OnException(HttpActionExecutedContext context)
         {
             //if (context.Exception is ArgumentException || context.Exception is ValidationException)
@@ -34,14 +32,17 @@ namespace ToDoApp.WebApi.Handlers
 
         private void ReportError(HttpActionExecutedContext actionExecutedContext)
         {
-            _auditLogService = IoCUtility.Resolve<IAuditLogService>();
             Exception exception = actionExecutedContext.Exception;
-            Task.Run(() => _auditLogService.Save("ExceptionHandler", new AuditLogItem<int, object>
-            {
-                Action = actionExecutedContext.Request.RequestUri.PathAndQuery,
-                Message = exception.Message,
-                Entity = exception
-            }));
+            Task.Run(() => {
+                var auditLogService = IoCUtility.Resolve<IAuditLogService>();
+
+                auditLogService.Save("ApiExceptionHandler", new AuditLogItem<int, object>
+                {
+                    Action = actionExecutedContext.Request.RequestUri.PathAndQuery,
+                    Message = exception.Message,
+                    Entity = exception
+                });
+            });
         }
     }
 }

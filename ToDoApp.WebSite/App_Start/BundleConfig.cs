@@ -8,7 +8,9 @@ namespace ToDoApp.WebSite
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/Content/js").Include(
-                      "~/Content/js/main.js"));
+                        "~/Content/js/date.format.js",
+                        "~/Content/js/main.js"
+                      ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/css/main.css"

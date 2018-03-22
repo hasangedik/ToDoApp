@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Newtonsoft.Json;
 using ToDoApp.WebApi.Helper;
-using ToDoApp.WebApi.Utility;
 
 namespace ToDoApp.WebApi
 {
@@ -27,7 +26,13 @@ namespace ToDoApp.WebApi
             var jsonFormatter = configuration.Formatters.JsonFormatter;
             jsonFormatter.SerializerSettings = new JsonSerializerSettings()
             {
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                PreserveReferencesHandling = PreserveReferencesHandling.None,
+                NullValueHandling = NullValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Include,
+                ObjectCreationHandling = ObjectCreationHandling.Reuse,
+                TypeNameHandling = TypeNameHandling.None,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateTimeZoneHandling = DateTimeZoneHandling.Local
             };
         }
     }

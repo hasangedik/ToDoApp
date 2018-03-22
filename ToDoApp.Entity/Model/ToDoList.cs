@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ToDoApp.Entity.Model
@@ -15,6 +16,8 @@ namespace ToDoApp.Entity.Model
         [Required]
         public bool IsChecked { get; set; }
 
+        public DateTime? NotificationDate { get; set; }
+
         public int UserId { get; set; }
         public virtual User User { get; set; }
 
@@ -25,6 +28,7 @@ namespace ToDoApp.Entity.Model
             public const string Id = "Id";
             public const string Title = "Title";
             public const string IsChecked = "IsChecked";
+            public const string NotificationDate = "NotificationDate";
             public const string User = "User";
             public const string Tasks = "Tasks";
             public const string CreatedOn = "CreatedOn";

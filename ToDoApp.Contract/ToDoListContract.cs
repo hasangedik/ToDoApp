@@ -16,6 +16,8 @@ namespace ToDoApp.Contract
         [Required]
         public bool IsChecked { get; set; }
 
+        public DateTime? NotificationDate { get; set; }
+
         public int UserId { get; set; }
         public virtual List<TaskContract> Tasks { get; set; }
     }

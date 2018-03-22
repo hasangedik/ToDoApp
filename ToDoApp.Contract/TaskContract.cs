@@ -15,6 +15,8 @@ namespace ToDoApp.Contract
         [Required]
         public bool IsChecked { get; set; }
 
+        public DateTime? NotificationDate { get; set; }
+
         [Required]
         public int ToDoListId { get; set; }
     }

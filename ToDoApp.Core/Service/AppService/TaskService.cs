@@ -58,6 +58,7 @@ namespace ToDoApp.Core.Service.AppService
             entity = SetEntityFields(dbEntity, entity,
                 Task.Properties.Title,
                 Task.Properties.IsChecked,
+                Task.Properties.NotificationDate,
                 Task.Properties.ModifiedBy,
                 Task.Properties.ModifiedOn
             );

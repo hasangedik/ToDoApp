@@ -33,9 +33,10 @@ TODOLIST.Module = (function ($) {
     }
 
     function getListTemplate(obj) {
-        return '<li data-id="' + obj.Id + '" data-todoid="'+ obj.ToDoListId +'">' +
+        return '<li data-id="' + obj.Id + (obj.ToDoListId != undefined ? '" data-todoid="'+ obj.ToDoListId + '"' : '') + '">' +
           '<input type="checkbox" value="' + obj.Id + '" name="" ' + (obj.IsChecked ? 'checked' : '') + '>' +
           '<span class="text"> ' + obj.Title + '</span>' +
+          (obj.NotificationDate != null ? '<small class="label label-default"><i class="fa fa-clock-o"></i> ' + new Date(parseInt(obj.NotificationDate.substr(6))).format("dd.mm.yyyy HH:MM", true) + '</small>' : '') +
           '<div class="tools">' +
           '<i class="fa fa-edit"></i>' +
           '<i class="fa fa-trash-o"></i>' +
@@ -117,7 +118,7 @@ TODOLIST.Module = (function ($) {
         if (_self.$itemName.val()) {
             var model = {
                 Title: _self.$itemName.val(),
-                //datetime: _self.$datetime.val()
+                NotificationDate: _self.$datetime.val()
             };
 
             if (_options.type == "list") {
@@ -158,7 +159,7 @@ TODOLIST.Module = (function ($) {
             editPostMethod(option, {
                 Id: _options.todoId,
                 Title: _self.$itemName.val(),
-                datetime: _self.$datetime.val()
+                NotificationDate: _self.$datetime.val()
             });
 
             clearModal();
@@ -249,7 +250,6 @@ TODOLIST.Module = (function ($) {
 $(function () {
     TODOLIST.Module();
     $('.datetimepicker').datetimepicker({
-        locale: 'tr',
-        //defaultDate: moment()
+        locale: 'tr'
     });
 });

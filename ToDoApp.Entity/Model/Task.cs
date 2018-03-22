@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ToDoApp.Entity.Model
 {
@@ -14,6 +15,8 @@ namespace ToDoApp.Entity.Model
         [Required]
         public bool IsChecked { get; set; }
 
+        public DateTime? NotificationDate { get; set; }
+
         public int ToDoListId { get; set; }
         public virtual ToDoList ToDoList { get; set; }
 
@@ -22,6 +25,7 @@ namespace ToDoApp.Entity.Model
             public const string Id = "Id";
             public const string Title = "Title";
             public const string IsChecked = "IsChecked";
+            public const string NotificationDate = "NotificationDate";
             public const string ToDoList = "ToDoList";
             public const string CreatedOn = "CreatedOn";
             public const string CreatedBy = "CreatedBy";

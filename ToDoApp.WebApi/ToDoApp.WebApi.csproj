@@ -169,6 +169,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AuditLogController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Controllers\ToDoListsController.cs" />
     <Compile Include="Controllers\AuthenticationsController.cs" />

@@ -61,6 +61,16 @@ namespace ToDoApp.WebApi.Controllers
 
             return StatusCode(HttpStatusCode.InternalServerError);
         }
-       
+
+        [HttpDelete]
+        public IHttpActionResult Delete(int id)
+        {
+            var status = _taskService.Delete(id);
+
+            if (status)
+                return Ok();
+
+            return StatusCode(HttpStatusCode.InternalServerError);
+        }
     }
 }

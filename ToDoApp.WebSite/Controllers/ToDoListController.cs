@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Mvc;
@@ -32,7 +33,7 @@ namespace ToDoApp.WebSite.Controllers
         public ActionResult Post(ToDoListContract model)
         {
             var userId = (int)Session["usrid"];
-            model.UserId =  userId;
+            model.UserId = userId;
             if (ModelState.IsValid)
             {
                 var request = new RestRequest("todolists", Method.POST);
@@ -40,11 +41,40 @@ namespace ToDoApp.WebSite.Controllers
                 request.AddJsonBody(model);
 
                 IRestResponse response = RestClient.Execute(request);
-
                 return response.StatusCode != HttpStatusCode.OK ? new HttpStatusCodeResult(HttpStatusCode.InternalServerError) : new HttpStatusCodeResult(HttpStatusCode.OK);
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Update(ToDoListContract model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = new RestRequest("todolists", Method.PUT);
+                AddAuthHeaders(ref request, HttpMethod.Put.Method, "todolists");
+                model.ModifiedOn = DateTime.Now;
+                request.AddJsonBody(model);
+
+                IRestResponse response = RestClient.Execute(request);
+                return response.StatusCode != HttpStatusCode.OK ? new HttpStatusCodeResult(HttpStatusCode.InternalServerError) : new HttpStatusCodeResult(HttpStatusCode.OK);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            var request = new RestRequest("todolists", Method.DELETE);
+            AddAuthHeaders(ref request, HttpMethod.Delete.Method, "todolists");
+            request.AddParameter("id", id);
+
+            IRestResponse response = RestClient.Execute(request);
+            return response.StatusCode != HttpStatusCode.OK ? new HttpStatusCodeResult(HttpStatusCode.InternalServerError) : new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }

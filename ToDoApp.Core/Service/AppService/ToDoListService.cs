@@ -41,6 +41,13 @@ namespace ToDoApp.Core.Service.AppService
             return dbEntity;
         }
 
+        public bool Delete(int id)
+        {
+            var dbEntity = _toDoListRepository.Delete(id);
+            _unitOfWork.Commit();
+            return dbEntity;
+        }
+
         public ToDoList Get(int id)
         {
             return _toDoListRepository.Get(id);

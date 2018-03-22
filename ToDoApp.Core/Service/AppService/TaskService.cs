@@ -46,6 +46,13 @@ namespace ToDoApp.Core.Service.AppService
             return _taskRepository.Get(id);
         }
 
+        public bool Delete(int id)
+        {
+            var dbEntity = _taskRepository.Delete(id);
+            _unitOfWork.Commit();
+            return dbEntity;
+        }
+
         protected override void SetUpdateFields(Task dbEntity, ref Task entity)
         {
             entity = SetEntityFields(dbEntity, entity,

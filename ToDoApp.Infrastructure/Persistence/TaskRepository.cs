@@ -49,5 +49,15 @@ namespace ToDoApp.Infrastructure.Persistence
             _dbSet.AddOrUpdate(task);
             return true;
         }
+
+        public bool Delete(int id)
+        {
+            var entity = _dbSet.FirstOrDefault(x => x.Id == id);
+            if (entity == null)
+                return false;
+
+            _dbSet.Remove(entity);
+            return true;
+        }
     }
 }

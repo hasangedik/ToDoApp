@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Mvc;
@@ -42,6 +43,36 @@ namespace ToDoApp.WebSite.Controllers
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Update(TaskContract model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = new RestRequest("tasks", Method.PUT);
+                AddAuthHeaders(ref request, HttpMethod.Put.Method, "tasks");
+                model.ModifiedOn = DateTime.Now;
+                request.AddJsonBody(model);
+
+                IRestResponse response = RestClient.Execute(request);
+                return response.StatusCode != HttpStatusCode.OK ? new HttpStatusCodeResult(HttpStatusCode.InternalServerError) : new HttpStatusCodeResult(HttpStatusCode.OK);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            var request = new RestRequest("tasks", Method.DELETE);
+            AddAuthHeaders(ref request, HttpMethod.Delete.Method, "tasks");
+            request.AddParameter("id", id);
+
+            IRestResponse response = RestClient.Execute(request);
+            return response.StatusCode != HttpStatusCode.OK ? new HttpStatusCodeResult(HttpStatusCode.InternalServerError) : new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }

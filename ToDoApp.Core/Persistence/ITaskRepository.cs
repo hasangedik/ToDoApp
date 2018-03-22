@@ -9,5 +9,6 @@ namespace ToDoApp.Core.Persistence
         IList<Task> Search(TaskSearchArgs args);
         Task Save(Task task);
         bool Update(Task task);
+        bool Delete(int id);
     }
 }

@@ -173,7 +173,6 @@
     <Compile Include="Controllers\ToDoListsController.cs" />
     <Compile Include="Controllers\AuthenticationsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Controllers\TestsController.cs" />
     <Compile Include="Filters\AuthenticateAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

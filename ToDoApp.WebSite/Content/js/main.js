@@ -7,7 +7,8 @@ TODOLIST.Module = (function ($) {
         doneClass: "done",
         type: "group",
         editType: false,
-        todoId: 0
+        todoId: 0,
+        taskTodoId: 0
     }
 
     function init() {
@@ -32,7 +33,7 @@ TODOLIST.Module = (function ($) {
     }
 
     function getListTemplate(obj) {
-        return '<li data-id="' + obj.Id + '">' +
+        return '<li data-id="' + obj.Id + '" data-todoid="'+ obj.ToDoListId +'">' +
           '<input type="checkbox" value="' + obj.Id + '" name="" ' + (obj.IsChecked ? 'checked' : '') + '>' +
           '<span class="text"> ' + obj.Title + '</span>' +
           '<div class="tools">' +
@@ -44,6 +45,7 @@ TODOLIST.Module = (function ($) {
 
     function getList() {
         $.get("/todolist/get", function (data, textStatus) {
+            console.log(textStatus)
             var resultHtml = '';
             $.each(data, function (i, e) {
                 resultHtml += getListTemplate(e);
@@ -57,6 +59,7 @@ TODOLIST.Module = (function ($) {
 
     function getTasks(id) {
         $.get("/task/get?toDoListId=" + id, function (data, textStatus) {
+            console.log(textStatus)
             var resultHtml = '';
             $.each(data, function (i, e) {
                 resultHtml += getListTemplate(e);
@@ -70,47 +73,62 @@ TODOLIST.Module = (function ($) {
     }
 
     function marksAsDoneProccess(type, e) {
-        if (type == "group") {
-            editPostMethod({
-                Id:  $(e).parent().data("id"),
-                //IsChecked: self.$groupList.find("input:checked")
+        if (e != undefined) {
+            editPostMethod(type, {
+                Id: $(e).parent().data("id"),
+                Title: $(e).siblings("span").text(),
+                IsChecked: $(e).is(":checked")
             });
+        }
+        if (type == "group") {
             _self.$groupList.find("input").parent().removeClass(_options.doneClass);
             _self.$groupList.find("input:checked").parent().addClass(_options.doneClass);
-            if (_self.$groupList.find("input:checked")[0] != undefined) {
-                _self.$list.find("input").prop("checked", true).parent().addClass(_options.doneClass);
-            } else {
-                _self.$list.find("input").prop("checked", false).parent().removeClass(_options.doneClass)
-            }
+            //if (_self.$groupList.find("input:checked")[0] != undefined) {
+            //    _self.$list.find("input").prop("checked", true).parent().addClass(_options.doneClass);
+            //} else {
+            //    _self.$list.find("input").prop("checked", false).parent().removeClass(_options.doneClass)
+            //}
 
         } else {
+            self.$list.find("input").parent().removeClass(_options.doneClass);
             _self.$list.find("input:checked").parent().addClass(_options.doneClass);
         }
     }
 
     function deleteProccess($ths) {
+        var id = $ths.parent().parent().data("id");
         $ths.parent().parent().remove();
 
         //Buraya delete ajax method yazılabilir.
+        $.post(_options.type == "group" ? '/todolist/delete' : '/task/delete',
+            { id : id},
+            function (data, status) {
+                console.log("success");
+                if (_options.type == "group")
+                    getList();
+                else
+                    getTasks(_options.todoId);
+                _self.$addToListItemModal.modal("hide");
+            }
+        );
     }
 
     function addItemProccess() {
         if (_self.$itemName.val()) {
-           var model = {
+            var model = {
                 Title: _self.$itemName.val(),
                 //datetime: _self.$datetime.val()
             };
 
-           if (_options.type == "list") {
-               model.ToDoListId = _options.todoId;
-           }
+            if (_options.type == "list") {
+                model.ToDoListId = _options.todoId;
+            }
             addPostMethod(model);
             clearModal();
         }
     }
 
     function addPostMethod(model) {
-
         $.post(_options.type == "group" ? '/todolist/post' : '/task/post',
             model,
             function (data, status) {
@@ -124,7 +142,7 @@ TODOLIST.Module = (function ($) {
         );
     }
 
-    function editProccess(type) {
+    function editProccess(type, option) {
         var dateElement = $(".edit").find(".label");
         var nameElement = $(".edit").find(".text");
         var date = dateElement.text();
@@ -133,12 +151,12 @@ TODOLIST.Module = (function ($) {
         if (type != "post") {
             _self.$itemName.val(name);
             _self.$datetime.val(date);
-        } else if (_self.$itemName.val() && _self.$datetime.val()) {
+        } else if (_self.$itemName.val()) {
             nameElement.text(_self.$itemName.val());
             dateElement.text(_self.$datetime.val());
 
-            editPostMethod({
-                Id: "0",
+            editPostMethod(option, {
+                Id: _options.todoId,
                 Title: _self.$itemName.val(),
                 datetime: _self.$datetime.val()
             });
@@ -147,11 +165,20 @@ TODOLIST.Module = (function ($) {
         }
     }
 
-    function editPostMethod(obj) {
+    function editPostMethod(type, model) {
         $(".edit").removeClass('edit');
         _self.$addToListItemModal.modal("hide");
-        //buraya ajax methodu yazılabilir.
-        debugger;
+
+        $.post(type == "group" ? '/todolist/update' : '/task/update',
+            model,
+            function (data, status) {
+                if (type == "group")
+                    getList();
+                else
+                    getTasks(_options.taskTodoId);
+                _self.$addToListItemModal.modal("hide");
+            }
+        );
     }
 
     function clearModal() {
@@ -160,12 +187,13 @@ TODOLIST.Module = (function ($) {
     }
 
     function eventListener() {
-        $(document).on("change", "#groupList input", function (e) {
-            marksAsDoneProccess("group", e);
+        $(document).on("change", "#groupList input", function () {
+            marksAsDoneProccess("group", this);
         });
 
-        $(document).on("change", "#list input", function (e) {
-            marksAsDoneProccess("list", e);
+        $(document).on("change", "#list input", function () {
+            _options.taskTodoId = $(this).parent().data("todoid");
+            marksAsDoneProccess("list", this);
         });
 
         _self.$addItemGroup.on("click", function () {
@@ -188,23 +216,28 @@ TODOLIST.Module = (function ($) {
         });
 
         $(document).on("click", ".fa-trash-o", function () {
+            var option = $(this).parents(".todo-list").attr('id') == 'groupList' ? 'group' : 'list';
+            _options.type = option;
+
             deleteProccess($(this));
         });
 
         $(document).on("click", ".fa-edit", function () {
             _options.editType = true;
+            var option = $(this).parents(".todo-list").attr('id') == 'groupList' ? 'group' : 'list';
 
-            $(this)
-              .parent()
-              .parent()
-              .addClass('edit');
+            _options.type = option;
+            _options.todoId = $(this).parent().parent().data("id");
+            _options.taskTodoId = $(this).parent().parent().data("todoid");
+            $(this).parent().parent().addClass('edit');
 
-            editProccess();
+            editProccess(undefined, option);
             _self.$addToListItemModal.modal("show");
         });
 
         _self.$saveBtn.on("click", function () {
-            !_options.editType ? addItemProccess() : editProccess("post");
+            //var option = $(this).parent().siblings(".box-body").find(".todo-list").attr('id') == 'groupList' ? 'group' : 'list';
+            !_options.editType ? addItemProccess() : editProccess("post", _options.type);
         });
     }
 

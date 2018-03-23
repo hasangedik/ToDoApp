@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
-using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using ToDoApp.Contract;
@@ -30,38 +30,62 @@ namespace ToDoApp.WebApi.Tasks
 
         public void Execute()
         {
-            SendMail();
             IList<ToDoList> toDoLists;
             IList<Task> tasks;
             List<NotificationItemContract> notificationItems = GetAvailableItemsFromDb(out toDoLists, out tasks);
+            SendNotification(notificationItems);
+            UpdateDatabase(toDoLists, tasks);
+        }
 
+        private void UpdateDatabase(IList<ToDoList> toDoLists, IList<Task> tasks)
+        {
+            if (toDoLists.Any())
+            {
+                foreach (var toDoList in toDoLists)
+                {
+                    toDoList.IsNotificationSend = true;
+                    _toDoListService.Save(toDoList);
+                }
+            }
+
+            if (tasks.Any())
+            {
+                foreach (var task in tasks)
+                {
+                    task.IsNotificationSend = true;
+                    _taskService.Save(task);
+                }
+            }
         }
 
         private void SendNotification(List<NotificationItemContract> notificationItems)
         {
-            
+            foreach (var notificationItem in notificationItems)
+            {
+                string bodyMessage = string.Format("Hi {0}, <br/>This notification for: {1}", notificationItem.FullName, notificationItem.Title);
+                SendMail(notificationItem.Email, bodyMessage);
+            }
         }
 
-        private void SendMail()
+        private void SendMail(string mailTo, string bodyMessage)
         {
-            try
+            MailMessage mail = new MailMessage(ConfigurationManager.AppSettings["NotificationFromMail"], mailTo);
+            SmtpClient client = new SmtpClient
             {
-                MailMessage mail = new MailMessage(ConfigurationManager.AppSettings["NotificationFromMail"], "account@mumbstudio.com");
-                SmtpClient client = new SmtpClient();
-                client.Port = Convert.ToInt32(ConfigurationManager.AppSettings["NotificationSmtpPort"]);
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["NotificationSmtpPort"], "c90fd8b5f6afa3");
-                client.Host = "smtp.mailtrap.io";
-                mail.Subject = "this is a test email.";
-                mail.Body = "this is my test email body";
-                client.Send(mail);
-            }
-            catch (System.Exception ex)
-            {
-
-                throw ex;
-            }
+                Port = Convert.ToInt32(ConfigurationManager.AppSettings["NotificationSmtpPort"]),
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Host = ConfigurationManager.AppSettings["NotificationSmtpHost"],
+                Credentials =
+                    new NetworkCredential(
+                        ConfigurationManager.AppSettings["NotificationSmtpUsername"],
+                        ConfigurationManager.AppSettings["NotificationSmtpPassword"]
+                        )
+            };
+            mail.Subject = ConfigurationManager.AppSettings["NotificationMailSubject"];
+            mail.IsBodyHtml = true;
+            mail.Body = bodyMessage;
+            client.Send(mail);
         }
 
         private List<NotificationItemContract> GetAvailableItemsFromDb(out IList<ToDoList> toDoLists, out IList<Task> tasks)

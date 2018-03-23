@@ -33,17 +33,17 @@ namespace ToDoApp.WebApi
                    QueuePollInterval = TimeSpan.FromSeconds(15)
                }).UseLog4NetLogProvider();
 
-            //#if DEBUG
+#if DEBUG
 
-            RecurringJob.RemoveIfExists("sitemapcachechecker");
+            RecurringJob.RemoveIfExists("NotificationSender");
             BackgroundJob.Enqueue(() => new NotificationSender().Execute());
 
-            //#else
-            //            int sitemapCacheCheckerInterval;
-            //            int.TryParse(ConfigurationManager.AppSettings["SitemapCacheCheckerInterval"], out sitemapCacheCheckerInterval);
+#else
+            int notificationSenderIntervalMin;
+            int.TryParse(ConfigurationManager.AppSettings["NotificationSenderIntervalMin"], out notificationSenderIntervalMin);
 
-            //            RecurringJob.AddOrUpdate("sitemapcachechecker",() => new SitemapCacheChecker().Check(), Cron.MinuteInterval(sitemapCacheCheckerInterval != 0 ? sitemapCacheCheckerInterval : 5), queue: "checker");
-            //#endif
+            RecurringJob.AddOrUpdate("NotificationSender", () => new NotificationSender().Execute(), Cron.MinuteInterval(notificationSenderIntervalMin != 0 ? notificationSenderIntervalMin : 5), queue: "NotificationSender");
+#endif
         }
     }
 }

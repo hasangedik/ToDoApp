@@ -68,5 +68,23 @@ namespace ToDoApp.Resources {
                 return ResourceManager.GetString("Internal_Server_Error", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yetkiniz Yok.
+        /// </summary>
+        public static string Unauthorized {
+            get {
+                return ResourceManager.GetString("Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hatalı kullanıcı adı veya şifre.
+        /// </summary>
+        public static string Wrong_Password {
+            get {
+                return ResourceManager.GetString("Wrong_Password", resourceCulture);
+            }
+        }
     }
 }

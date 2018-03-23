@@ -26,9 +26,9 @@ namespace ToDoApp.WebApi.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult Get()
+        public IHttpActionResult Get(int userId)
         {
-            var entity = _toDoListService.GetAll();
+            var entity = _toDoListService.GetAll(userId);
             var viewModel = Mapper.Map<List<ToDoList>, List<ToDoListContract>>(entity);
 
             return Json(viewModel);

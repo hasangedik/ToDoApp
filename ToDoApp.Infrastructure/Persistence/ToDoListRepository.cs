@@ -65,5 +65,10 @@ namespace ToDoApp.Infrastructure.Persistence
                 .Include(x=> x.User)
                 .ToList();
         }
+
+        public IList<ToDoList> GetAll(int userId)
+        {
+            return _dbSet.Where(x => x.UserId == userId).ToList();
+        }
     }
 }

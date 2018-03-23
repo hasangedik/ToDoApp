@@ -34,8 +34,10 @@ namespace ToDoApp.WebSite.Controllers
                 request.AddParameter("password", model.Password);
 
                 IRestResponse<int> response = RestClient.Execute<int>(request);
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Unauthorized)
                     ModelState.AddModelError("", ValidationMessages.Internal_Server_Error);
+                if(response.StatusCode == HttpStatusCode.Unauthorized)
+                    ModelState.AddModelError("", ValidationMessages.Wrong_Password);
                 else
                 {
                     Session["usrid"] = response.Data;

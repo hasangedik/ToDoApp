@@ -11,5 +11,6 @@ namespace ToDoApp.Core.Persistence
         bool Update(ToDoList toDoList);
         bool Delete(int id);
         IList<ToDoList> GetNotificationNotSendItems();
+        IList<ToDoList> GetAll(int userId);
     }
 }

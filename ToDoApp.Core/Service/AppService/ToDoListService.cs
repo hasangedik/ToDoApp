@@ -17,9 +17,9 @@ namespace ToDoApp.Core.Service.AppService
             _unitOfWork = unitOfWork;
         }
 
-        public List<ToDoList> GetAll()
+        public List<ToDoList> GetAll(int userId)
         {
-            return _toDoListRepository.GetAll().ToList();
+            return _toDoListRepository.GetAll(userId).ToList();
         }
 
         public ToDoList Save(ToDoList toDoList)

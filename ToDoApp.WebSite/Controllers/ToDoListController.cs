@@ -18,6 +18,8 @@ namespace ToDoApp.WebSite.Controllers
         {
             var request = new RestRequest("todolists", Method.GET);
             AddAuthHeaders(ref request, HttpMethod.Get.Method, "todolists");
+            var userId = (int)Session["usrid"];
+            request.AddParameter("userId", userId);
 
             IRestResponse<List<ToDoListContract>> response = RestClient.Execute<List<ToDoListContract>>(request);
             if (response.StatusCode != HttpStatusCode.OK)
@@ -32,12 +34,12 @@ namespace ToDoApp.WebSite.Controllers
         [HttpPost]
         public ActionResult Post(ToDoListContract model)
         {
-            var userId = (int)Session["usrid"];
-            model.UserId = userId;
             if (ModelState.IsValid)
             {
                 var request = new RestRequest("todolists", Method.POST);
                 AddAuthHeaders(ref request, HttpMethod.Post.Method, "todolists");
+                var userId = (int)Session["usrid"];
+                model.UserId = userId;
                 request.AddJsonBody(model);
 
                 IRestResponse response = RestClient.Execute(request);

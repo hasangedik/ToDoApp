@@ -120,4 +120,10 @@
   <data name="Internal_Server_Error" xml:space="preserve">
     <value>Sunucu Hatası</value>
   </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>Yetkiniz Yok</value>
+  </data>
+  <data name="Wrong_Password" xml:space="preserve">
+    <value>Hatalı kullanıcı adı veya şifre</value>
+  </data>
 </root>

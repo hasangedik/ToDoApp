@@ -17,6 +17,8 @@ namespace ToDoApp.Entity.Model
 
         public DateTime? NotificationDate { get; set; }
 
+        public bool IsNotificationSend { get; set; }
+
         public int ToDoListId { get; set; }
         public virtual ToDoList ToDoList { get; set; }
 

@@ -10,5 +10,6 @@ namespace ToDoApp.Core.Persistence
         Task Save(Task task);
         bool Update(Task task);
         bool Delete(int id);
+        IList<Task> GetNotificationNotSendItems();
     }
 }

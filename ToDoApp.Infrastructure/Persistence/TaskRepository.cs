@@ -59,5 +59,14 @@ namespace ToDoApp.Infrastructure.Persistence
             _dbSet.Remove(entity);
             return true;
         }
+
+        public IList<Task> GetNotificationNotSendItems()
+        {
+            return _dbSet
+                .Where(x => !x.IsNotificationSend && x.NotificationDate < DateTime.Now)
+                .Include(x=> x.ToDoList)
+                .Include(x=> x.ToDoList.User)
+                .ToList();
+        }
     }
 }

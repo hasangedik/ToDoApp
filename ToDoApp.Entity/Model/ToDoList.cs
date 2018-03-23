@@ -18,6 +18,8 @@ namespace ToDoApp.Entity.Model
 
         public DateTime? NotificationDate { get; set; }
 
+        public bool IsNotificationSend { get; set; }
+
         public int UserId { get; set; }
         public virtual User User { get; set; }
 

@@ -35,7 +35,7 @@ namespace ToDoApp.WebApi.Controllers
             });
             var viewModel = Mapper.Map<IList<Task>, IList<TaskContract>>(entity);
 
-            return Ok(viewModel);
+            return Json(viewModel);
         }
 
         [HttpPost]

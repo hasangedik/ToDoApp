@@ -31,9 +31,16 @@ namespace ToDoApp.WebApi.Utility
                     .ImplementedBy<DatabaseContextFactory>()
                     .LifestyleSingleton()
                     .UsingFactoryMethod(x => DatabaseContextFactory.Instance),
+                //Component.For<IDatabaseContextFactory<DbContext>>()
+                //    .ImplementedBy<DatabaseContextFactory>()
+                //    .Named("isolatedContext")
+                //    .UsingFactoryMethod(x => DatabaseContextFactory.Instance),
                 Component.For<IUnitOfWork<DbContext>>()
                     .ImplementedBy<UnitOfWork>()
                     .LifestylePerWebRequest(),
+                Component.For<IUnitOfWork<DbContext>>()
+                    .ImplementedBy<UnitOfWork>()
+                    .Named("isolatedUnitOfWork"),
                 Component.For<IUserRepository>()
                     .ImplementedBy<UserRepository>()
                     .LifestylePerWebRequest()
@@ -42,20 +49,33 @@ namespace ToDoApp.WebApi.Utility
                     .ImplementedBy<ToDoListRepository>()
                     .LifestylePerWebRequest()
                     .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>(); }),
+                Component.For<IToDoListRepository>()
+                    .ImplementedBy<ToDoListRepository>()
+                    .Named("isolatedToDoListRepository")
+                    .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>("isolatedUnitOfWork"); }),
                 Component.For<ITaskRepository>()
                     .ImplementedBy<TaskRepository>()
                     .LifestylePerWebRequest()
                     .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>(); }),
+                Component.For<ITaskRepository>()
+                    .ImplementedBy<TaskRepository>()
+                    .Named("isolatedTaskRepository")
+                    .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>("isolatedUnitOfWork"); }),
                 Component.For<IAuditLogService>()
                     .ImplementedBy<AuditLogService>()
                     .LifestyleSingleton()
                     .DynamicParameters((kernel, parameters) => { parameters["connectionString"] = ConfigurationManager.AppSettings["MongoDbConnectionString"]; })
         );
 
-    }
+        }
         public static T Resolve<T>()
         {
             return Container.Resolve<T>();
+        }
+
+        public static T Resolve<T>(string name)
+        {
+            return Container.Resolve<T>(name);
         }
     }
 }

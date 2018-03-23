@@ -1,14 +1,19 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Hangfire;
 using Newtonsoft.Json;
 using ToDoApp.WebApi.Helper;
+using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 namespace ToDoApp.WebApi
 {
     public class WebApiApplication : HttpApplication
     {
+        private BackgroundJobServer _backgroundJobServer;
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -16,6 +21,17 @@ namespace ToDoApp.WebApi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             ConfigureFormatter(GlobalConfiguration.Configuration);
             ContractMapping.MappingRegistration();
+
+            GlobalInitializer.Initialize();
+
+            _backgroundJobServer = new BackgroundJobServer(
+                new BackgroundJobServerOptions()
+                {
+                    Queues = new string[] { "default", "checker" },
+                    ServerName = Environment.MachineName
+                });
+
+            
         }
 
         private void ConfigureFormatter(HttpConfiguration configuration)
@@ -34,6 +50,11 @@ namespace ToDoApp.WebApi
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             };
+        }
+
+        protected void Application_End(object sender, EventArgs e)
+        {
+            _backgroundJobServer.Dispose();
         }
     }
 }

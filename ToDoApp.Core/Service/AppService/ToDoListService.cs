@@ -53,6 +53,11 @@ namespace ToDoApp.Core.Service.AppService
             return _toDoListRepository.Get(id);
         }
 
+        public IList<ToDoList> GetNotificationNotSendItems()
+        {
+            return _toDoListRepository.GetNotificationNotSendItems();
+        }
+
         protected override void SetUpdateFields(ToDoList dbEntity, ref ToDoList entity)
         {
             entity = SetEntityFields(dbEntity, entity,

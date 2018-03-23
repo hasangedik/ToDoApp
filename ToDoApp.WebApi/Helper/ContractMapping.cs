@@ -23,7 +23,7 @@ namespace ToDoApp.WebApi.Helper
                 .Member(x => x.Surname, o => o.Surname.Trim())
                 .Member(x => x.Email, o => o.Email.Trim())
                 .Member(x => x.Password, o => o.Password.Trim())
-                .Member(x => x.CreatedOn, o => o.CreatedOn == default(DateTime) ? DateTime.Now : o.CreatedOn);
+                .Member(x => x.CreatedOn, o => o.CreatedOn == default(DateTime) || o.CreatedOn.Year.ToString() == "1" ? DateTime.Now : o.CreatedOn);
 
             Mapper.Register<User, UserContract>()
                 .Ignore(x => x.Password)
@@ -37,7 +37,7 @@ namespace ToDoApp.WebApi.Helper
         {
             Mapper.Register<TaskContract, Task>()
                 .Member(x => x.Title, o => o.Title.Trim())
-                .Member(x => x.CreatedOn, o => o.CreatedOn == default(DateTime) ? DateTime.Now : o.CreatedOn);
+                .Member(x => x.CreatedOn, o => o.CreatedOn == default(DateTime) || o.CreatedOn.Year.ToString() == "1" ? DateTime.Now : o.CreatedOn);
 
             Mapper.Register<Task, TaskContract>();
         }
@@ -46,7 +46,7 @@ namespace ToDoApp.WebApi.Helper
         {
             Mapper.Register<ToDoListContract, ToDoList>()
                 .Member(x => x.Title, o => o.Title.Trim())
-                .Member(x => x.CreatedOn, o => o.CreatedOn == default(DateTime) ? DateTime.Now : o.CreatedOn);
+                .Member(x => x.CreatedOn, o => o.CreatedOn == default(DateTime) || o.CreatedOn.Year.ToString() == "1" ? DateTime.Now : o.CreatedOn);
 
             Mapper.Register<ToDoList, ToDoListContract>();
         }

@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AuditLogItemContract.cs" />
     <Compile Include="ContractBase.cs" />
+    <Compile Include="NotificationItemContract.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskContract.cs" />
     <Compile Include="ToDoListContract.cs" />

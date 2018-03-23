@@ -7,6 +7,7 @@ Architectural Info
 <br/>-Logs on MongoDb
 <br/>-Entity Framework (Code First)
 <br/>-Asp.Net MVC WebSite
+<br/>-Repository Pattern with Unit of Work
 <br/>
 <br/>Used Frameworks
 <br/>-Castle Windsor

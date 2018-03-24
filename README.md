@@ -3,7 +3,7 @@ This is a simple SOA based Asp.Net MVC to-do list application.
 
 Architectural Info
 <br/>-Service Oriented
-<br/>-Basit HMAC Authentication on WebApi
+<br/>-Basic HMAC Authentication on WebApi
 <br/>-Entity Framework (Code First)
 <br/>-Asp.Net MVC WebSite
 <br/>-Repository Pattern with Unit of Work

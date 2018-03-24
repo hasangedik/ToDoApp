@@ -17,5 +17,4 @@ Architectural Info
 <br/>-Hangfire
 <br/>-RestSharp
 <br/>etc.
-
-Important: You should be execute Dependencies\hangFireInstallSql.sql on MsSql before run application.
+<br/><br/><b>Important:</b> You should be execute Dependencies\hangFireInstallSql.sql on MsSql before run application.

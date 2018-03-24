@@ -66,6 +66,7 @@
     <Compile Include="Persistence\IUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AppService\UserService.cs" />
+    <Compile Include="Service\INotificationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

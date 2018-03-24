@@ -3,8 +3,10 @@ using System.Data.Entity;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using ToDoApp.Core.Persistence;
+using ToDoApp.Core.Service;
 using ToDoApp.Core.Service.Log;
 using ToDoApp.Infrastructure.Persistence;
+using ToDoApp.Infrastructure.Service;
 using ToDoApp.MongoLogger.Service;
 
 namespace ToDoApp.WebApi.Utility
@@ -31,10 +33,6 @@ namespace ToDoApp.WebApi.Utility
                     .ImplementedBy<DatabaseContextFactory>()
                     .LifestyleSingleton()
                     .UsingFactoryMethod(x => DatabaseContextFactory.Instance),
-                //Component.For<IDatabaseContextFactory<DbContext>>()
-                //    .ImplementedBy<DatabaseContextFactory>()
-                //    .Named("isolatedContext")
-                //    .UsingFactoryMethod(x => DatabaseContextFactory.Instance),
                 Component.For<IUnitOfWork<DbContext>>()
                     .ImplementedBy<UnitOfWork>()
                     .LifestylePerWebRequest(),
@@ -64,7 +62,16 @@ namespace ToDoApp.WebApi.Utility
                 Component.For<IAuditLogService>()
                     .ImplementedBy<AuditLogService>()
                     .LifestyleSingleton()
-                    .DynamicParameters((kernel, parameters) => { parameters["connectionString"] = ConfigurationManager.AppSettings["MongoDbConnectionString"]; })
+                    .DynamicParameters((kernel, parameters) => { parameters["connectionString"] = ConfigurationManager.AppSettings["MongoDbConnectionString"]; }),
+                Component.For<INotificationService>()
+                    .ImplementedBy<MailNotificationService>()
+                    .DynamicParameters((kernel, parameters) =>
+                    {
+                        parameters["smtpHost"] = ConfigurationManager.AppSettings["NotificationSmtpHost"];
+                        parameters["smtpPort"] = ConfigurationManager.AppSettings["NotificationSmtpPort"];
+                        parameters["smtpUsername"] = ConfigurationManager.AppSettings["NotificationSmtpUsername"];
+                        parameters["smtpPassword"] = ConfigurationManager.AppSettings["NotificationSmtpPassword"];
+                    })
         );
 
         }

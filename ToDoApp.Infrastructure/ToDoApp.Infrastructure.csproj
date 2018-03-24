@@ -61,6 +61,7 @@
     <Compile Include="Persistence\ToDoListRepository.cs" />
     <Compile Include="Persistence\UserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\MailNotificationService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

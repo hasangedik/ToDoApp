@@ -30,8 +30,6 @@ namespace ToDoApp.WebApi
                     Queues = new string[] { "default", "checker" },
                     ServerName = Environment.MachineName
                 });
-
-            
         }
 
         private void ConfigureFormatter(HttpConfiguration configuration)

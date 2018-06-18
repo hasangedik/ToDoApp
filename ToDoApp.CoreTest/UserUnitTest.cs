@@ -6,7 +6,7 @@ using ToDoApp.Core.Service.AppService;
 using ToDoApp.Entity.Model;
 using ToDoApp.Test.Helper;
 
-namespace ToDoApp.Test
+namespace ToDoApp.CoreTest
 {
     [TestClass]
     public class UserUnitTest
@@ -16,9 +16,9 @@ namespace ToDoApp.Test
         public UserUnitTest()
         {
             var unitOfWork = IoCUtility.Resolve<IUnitOfWork<DbContext>>();
-            var userRepository = IoCUtility.Resolve<IUserRepository>();
+            var repositoryFactory = IoCUtility.Resolve<IRepositoryFactory>();
 
-            _userService = new UserService(userRepository, unitOfWork);
+            _userService = new UserService(unitOfWork, repositoryFactory);
         }
 
         [TestMethod]

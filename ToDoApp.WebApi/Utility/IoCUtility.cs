@@ -36,29 +36,21 @@ namespace ToDoApp.WebApi.Utility
                 Component.For<IUnitOfWork<DbContext>>()
                     .ImplementedBy<UnitOfWork>()
                     .LifestylePerWebRequest(),
+                Component.For<IRepositoryFactory>()
+                    .ImplementedBy<RepositoryFactory>()
+                    .LifestylePerWebRequest()
+                    .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>(); }),
+
+                #region Isolated Factories
                 Component.For<IUnitOfWork<DbContext>>()
                     .ImplementedBy<UnitOfWork>()
                     .Named("isolatedUnitOfWork"),
-                Component.For<IUserRepository>()
-                    .ImplementedBy<UserRepository>()
-                    .LifestylePerWebRequest()
-                    .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>(); }),
-                Component.For<IToDoListRepository>()
-                    .ImplementedBy<ToDoListRepository>()
-                    .LifestylePerWebRequest()
-                    .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>(); }),
-                Component.For<IToDoListRepository>()
-                    .ImplementedBy<ToDoListRepository>()
-                    .Named("isolatedToDoListRepository")
+                Component.For<IRepositoryFactory>()
+                    .ImplementedBy<RepositoryFactory>()
+                    .Named("isolatedRepositoryFactory")
                     .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>("isolatedUnitOfWork"); }),
-                Component.For<ITaskRepository>()
-                    .ImplementedBy<TaskRepository>()
-                    .LifestylePerWebRequest()
-                    .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>(); }),
-                Component.For<ITaskRepository>()
-                    .ImplementedBy<TaskRepository>()
-                    .Named("isolatedTaskRepository")
-                    .DynamicParameters((kernel, parameters) => { parameters["unitOfWork"] = Resolve<IUnitOfWork<DbContext>>("isolatedUnitOfWork"); }),
+                #endregion
+
                 Component.For<IAuditLogService>()
                     .ImplementedBy<AuditLogService>()
                     .LifestyleSingleton()

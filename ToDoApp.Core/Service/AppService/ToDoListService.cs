@@ -11,9 +11,9 @@ namespace ToDoApp.Core.Service.AppService
         private readonly IUnitOfWork<DbContext> _unitOfWork;
         private readonly IToDoListRepository _toDoListRepository;
 
-        public ToDoListService(IToDoListRepository toDoListRepository, IUnitOfWork<DbContext> unitOfWork)
+        public ToDoListService(IUnitOfWork<DbContext> unitOfWork, IRepositoryFactory repositoryFactory)
         {
-            _toDoListRepository = toDoListRepository;
+            _toDoListRepository = repositoryFactory.GeToDoListRepository();
             _unitOfWork = unitOfWork;
         }
 

@@ -11,9 +11,9 @@ namespace ToDoApp.Core.Service.AppService
         private readonly IUnitOfWork<DbContext> _unitOfWork;
         private readonly ITaskRepository _taskRepository;
 
-        public TaskService(ITaskRepository taskRepository, IUnitOfWork<DbContext> unitOfWork)
+        public TaskService(IUnitOfWork<DbContext> unitOfWork, IRepositoryFactory repositoryFactory)
         {
-            _taskRepository = taskRepository;
+            _taskRepository = repositoryFactory.GeTaskRepository();
             _unitOfWork = unitOfWork;
         }
 

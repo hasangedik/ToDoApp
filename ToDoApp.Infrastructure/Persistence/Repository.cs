@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -8,11 +9,11 @@ using ToDoApp.Core.Persistence;
 
 namespace ToDoApp.Infrastructure.Persistence
 {
-    public class MasterRepository<TEntity, TKey> : IMasterRepository<TEntity, TKey> where TEntity : class
+    public class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : class
     {
         private readonly DbSet<TEntity> _dbSet;
 
-        protected MasterRepository(IUnitOfWork<DbContext> unitOfWork)
+        protected Repository(IUnitOfWork<DbContext> unitOfWork)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException(nameof(unitOfWork), @"Unit of work cannot be null");
@@ -45,6 +46,27 @@ namespace ToDoApp.Infrastructure.Persistence
             return _dbSet.Where(predicate).ToList();
         }
 
+        public TEntity Save(TEntity entity)
+        {
+            return _dbSet.Add(entity);
+        }
+
+        public bool Update(TEntity entity)
+        {
+            _dbSet.AddOrUpdate(entity);
+            return true;
+        }
+
+        public bool Delete(TKey id)
+        {
+            var entity = Get(id);
+            if (entity == null)
+                return false;
+
+            _dbSet.Remove(entity);
+            return true;
+        }
+
         protected TEntity SetEntityFields<T>(TEntity entity, TEntity from, params string[] properties)
         {
             var type = entity.GetType();
@@ -60,6 +82,11 @@ namespace ToDoApp.Infrastructure.Persistence
                 propertyInfo.SetValue(entity, propertyInfo.GetValue(@from, null), null);
             }
             return entity;
+        }
+
+        public void Dispose()
+        {
+            //todo: bilare düzelt şunu
         }
     }
 }

@@ -9,9 +9,9 @@ namespace ToDoApp.Core.Service.AppService
         private readonly IUnitOfWork<DbContext> _unitOfWork;
         private readonly IUserRepository _userRepository;
 
-        public UserService(IUserRepository userRepository, IUnitOfWork<DbContext> unitOfWork)
+        public UserService(IUnitOfWork<DbContext> unitOfWork, IRepositoryFactory repositoryFactory)
         {
-            _userRepository = userRepository;
+            _userRepository = repositoryFactory.GetUserRepository();
             _unitOfWork = unitOfWork;
         }
 

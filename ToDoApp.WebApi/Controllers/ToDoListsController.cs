@@ -12,7 +12,7 @@ using ToDoApp.WebApi.Utility;
 
 namespace ToDoApp.WebApi.Controllers
 {
-    [Authenticate]
+    //[Authenticate]
     [RoutePrefix("api/todolists")]
     public class ToDoListsController : ApiController
     {
@@ -20,9 +20,9 @@ namespace ToDoApp.WebApi.Controllers
         public ToDoListsController()
         {
             var unitOfWork = IoCUtility.Resolve<IUnitOfWork<DbContext>>();
-            var toDoListRepository = IoCUtility.Resolve<IToDoListRepository>();
+            var repositoryFactory = IoCUtility.Resolve<IRepositoryFactory>();
 
-            _toDoListService = new ToDoListService(toDoListRepository, unitOfWork);
+            _toDoListService = new ToDoListService(unitOfWork, repositoryFactory);
         }
 
         [HttpGet]

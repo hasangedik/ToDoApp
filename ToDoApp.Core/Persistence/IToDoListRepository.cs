@@ -4,12 +4,9 @@ using ToDoApp.Entity.SearchArgs;
 
 namespace ToDoApp.Core.Persistence
 {
-    public interface IToDoListRepository : IMasterRepository<ToDoList, int>
+    public interface IToDoListRepository : IRepository<ToDoList, int>
     {
         IList<ToDoList> Search(ToDoListSearchArgs args);
-        ToDoList Save(ToDoList toDoList);
-        bool Update(ToDoList toDoList);
-        bool Delete(int id);
         IList<ToDoList> GetNotificationNotSendItems();
         IList<ToDoList> GetAll(int userId);
     }

@@ -55,7 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Persistence\DatabaseContextFactory.cs" />
-    <Compile Include="Persistence\MasterRepository.cs" />
+    <Compile Include="Persistence\Repository.cs" />
+    <Compile Include="Persistence\RepositoryFactory.cs" />
     <Compile Include="Persistence\TaskRepository.cs" />
     <Compile Include="Persistence\UnitOfWork.cs" />
     <Compile Include="Persistence\ToDoListRepository.cs" />

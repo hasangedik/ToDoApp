@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using ToDoApp.Core.Persistence;
 using ToDoApp.Entity.Model;
@@ -9,7 +8,7 @@ using ToDoApp.Entity.SearchArgs;
 
 namespace ToDoApp.Infrastructure.Persistence
 {
-    public class UserRepository : MasterRepository<User, int>, IUserRepository
+    public class UserRepository : Repository<User, int>, IUserRepository
     {
         private readonly DbSet<User> _dbSet;
         public UserRepository(UnitOfWork unitOfWork) : base(unitOfWork)
@@ -37,18 +36,6 @@ namespace ToDoApp.Infrastructure.Persistence
                 result = result.Where(x => x.Email == args.Email);
 
             return result.ToList();
-        }
-
-        public User Save(User user)
-        {
-            var entity = _dbSet.Add(user);
-            return entity;
-        }
-
-        public bool Update(User user)
-        {
-            _dbSet.AddOrUpdate(user);
-            return true;
         }
 
         public User GetUserByEmail(string email)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using ToDoApp.Core.Persistence;
 using ToDoApp.Entity.Model;
@@ -9,7 +8,7 @@ using ToDoApp.Entity.SearchArgs;
 
 namespace ToDoApp.Infrastructure.Persistence
 {
-    public class TaskRepository : MasterRepository<Task, int>, ITaskRepository
+    public class TaskRepository : Repository<Task, int>, ITaskRepository
     {
         private readonly DbSet<Task> _dbSet;
         public TaskRepository(UnitOfWork unitOfWork) : base(unitOfWork)
@@ -36,28 +35,6 @@ namespace ToDoApp.Infrastructure.Persistence
             }
 
             return result.ToList();
-        }
-
-        public Task Save(Task task)
-        {
-            var entity = _dbSet.Add(task);
-            return entity;
-        }
-
-        public bool Update(Task task)
-        {
-            _dbSet.AddOrUpdate(task);
-            return true;
-        }
-
-        public bool Delete(int id)
-        {
-            var entity = _dbSet.FirstOrDefault(x => x.Id == id);
-            if (entity == null)
-                return false;
-
-            _dbSet.Remove(entity);
-            return true;
         }
 
         public IList<Task> GetNotificationNotSendItems()

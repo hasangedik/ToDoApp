@@ -17,9 +17,9 @@ namespace ToDoApp.WebApi.Controllers
         public AuthenticationsController()
         {
             var unitOfWork = IoCUtility.Resolve<IUnitOfWork<DbContext>>();
-            var userRepository = IoCUtility.Resolve<IUserRepository>();
+            var repositoryFactory = IoCUtility.Resolve<IRepositoryFactory>();
 
-            _userService = new UserService(userRepository, unitOfWork);
+            _userService = new UserService(unitOfWork, repositoryFactory);
         }
 
         [HttpGet]

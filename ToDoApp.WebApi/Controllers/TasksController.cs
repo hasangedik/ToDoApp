@@ -13,7 +13,7 @@ using ToDoApp.WebApi.Utility;
 
 namespace ToDoApp.WebApi.Controllers
 {
-    [Authenticate]
+    //[Authenticate]
     [RoutePrefix("api/tasks")]
     public class TasksController : ApiController
     {
@@ -21,9 +21,9 @@ namespace ToDoApp.WebApi.Controllers
         public TasksController()
         {
             var unitOfWork = IoCUtility.Resolve<IUnitOfWork<DbContext>>();
-            var taskRepository = IoCUtility.Resolve<ITaskRepository>();
+            var repositoryFactory = IoCUtility.Resolve<IRepositoryFactory>();
 
-            _taskService = new TaskService(taskRepository, unitOfWork);
+            _taskService = new TaskService(unitOfWork, repositoryFactory);
         }
 
         [HttpGet]

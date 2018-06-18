@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Persistence\IRepositoryFactory.cs" />
     <Compile Include="Persistence\ITaskRepository.cs" />
     <Compile Include="Persistence\IToDoListRepository.cs" />
     <Compile Include="Service\AppService\AppServiceBase.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="Service\AppService\ToDoListService.cs" />
     <Compile Include="Service\Log\IAuditLogService.cs" />
     <Compile Include="Persistence\IDatabaseContextFactory.cs" />
-    <Compile Include="Persistence\IMasterRepository.cs" />
+    <Compile Include="Persistence\IRepository.cs" />
     <Compile Include="Persistence\IUnitOfWork.cs" />
     <Compile Include="Persistence\IUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

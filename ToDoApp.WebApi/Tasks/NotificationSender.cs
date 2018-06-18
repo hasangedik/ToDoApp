@@ -20,11 +20,10 @@ namespace ToDoApp.WebApi.Tasks
         public NotificationSender()
         {
             var unitOfWork = IoCUtility.Resolve<IUnitOfWork<DbContext>>("isolatedUnitOfWork");
-            var toDoListRepository = IoCUtility.Resolve<IToDoListRepository>("isolatedToDoListRepository");
-            var taskRepository = IoCUtility.Resolve<ITaskRepository>("isolatedTaskRepository");
-
-            _toDoListService = new ToDoListService(toDoListRepository, unitOfWork);
-            _taskService = new TaskService(taskRepository, unitOfWork);
+            var repositoryFactory = IoCUtility.Resolve<IRepositoryFactory>("isolatedRepositoryFactory");
+            
+            _toDoListService = new ToDoListService(unitOfWork, repositoryFactory);
+            _taskService = new TaskService(unitOfWork, repositoryFactory);
         }
 
         public void Execute()
